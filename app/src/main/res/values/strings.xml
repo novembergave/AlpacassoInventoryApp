@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">Alpacasso Inventory App</string>
+    <string name="action_settings">Settings</string>
+    <string name="blank_list">There are currently no Alpacassos in the inventory</string>
+    <string name="add_to_start">Click add to start!</string>
+    <string name="series">Series</string>
+    <string name="colour">Colour</string>
+    <string name="size">Size</string>
+    <string name="size_small">Small</string>
+    <string name="size_medium">Medium</string>
+    <string name="size_large">Large</string>
+    <string name="in_stock">In stock</string>
+    <string name="not_in_stock">Not in stock</string>
+    <string name="in_stock_display"> in stock</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="number_stock">Number in stock</string>
+    <string name="price">Unit Price</string>
+    <string name="price_unit">GBP£</string>
+    <string name="add_alpacasso">Add an Alpacasso</string>
+    <string name="edit_alpacasso">Edit an Alpacasso</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="delete_all">Delete all data</string>
+    <string name="delete_confirmation">Alpacasso has been deleted</string>
+    <string name="delete_all_confirmation">All Alpacassos have been deleted</string>
+    <string name="delete_prompt">Are you sure you want to delete?</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_dummy">Add dummy data</string>
+    <string name="prompt_missing">Missing data in fields</string>
+    <string name="prompt_error_saved">Error saving data</string>
+    <string name="prompt_not_saved">Entry not saved</string>
+    <string name="prompt_save_successful">Alpacasso saved successfully</string>
+    <string name="prompt_no_change">No changes have been made</string>
+    <string name="prompt_error_delete">Error deleting Alpacasso</string>
+    <string name="unsaved">Are you sure you want to leave this screen?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="restock">Restock</string>
+    <string name="restock_amount">Restock amount</string>
+    <string name="stocked">Stocked</string>
+    <string name="prompt_save_send">Would you like to save any changes and send the restock email?</string>
+    <string name="positive_save_send">Save and send</string>
+
+    <string name="error_series_required">Please enter series name</string>
+    <string name="error_colour_required">Please enter the colour</string>
+    <string name="error_size_required">Please select size</string>
+    <string name="error_stock_required">Please select if item is in stock</string>
+    <string name="error_stock_level">Please enter number held in stock</string>
+    <string name="error_restock">Please enter restock amount</string>
+    <string name="error_price_required">Please enter unit price</string>
+    <string name="error_image">Error with image data</string>
+
+
+    <string-array name="size_array">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+</resources>
