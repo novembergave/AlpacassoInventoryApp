@@ -1,14 +1,14 @@
 package com.example.android.alpacassoinventoryapp;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.os.Build;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.os.Build;
 
 public class ExifUtil {
     /**
@@ -78,12 +78,12 @@ public class ExifUtil {
              */
             if (Build.VERSION.SDK_INT >= 5) {
                 Class<?> exifClass = Class.forName("android.media.ExifInterface");
-                Constructor<?> exifConstructor = exifClass.getConstructor(new Class[] { String.class });
-                Object exifInstance = exifConstructor.newInstance(new Object[] { src });
-                Method getAttributeInt = exifClass.getMethod("getAttributeInt", new Class[] { String.class, int.class });
+                Constructor<?> exifConstructor = exifClass.getConstructor(new Class[]{String.class});
+                Object exifInstance = exifConstructor.newInstance(new Object[]{src});
+                Method getAttributeInt = exifClass.getMethod("getAttributeInt", new Class[]{String.class, int.class});
                 Field tagOrientationField = exifClass.getField("TAG_ORIENTATION");
                 String tagOrientation = (String) tagOrientationField.get(null);
-                orientation = (Integer) getAttributeInt.invoke(exifInstance, new Object[] { tagOrientation, 1});
+                orientation = (Integer) getAttributeInt.invoke(exifInstance, new Object[]{tagOrientation, 1});
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

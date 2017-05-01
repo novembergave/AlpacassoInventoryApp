@@ -2,9 +2,6 @@ package com.example.android.alpacassoinventoryapp;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.media.Image;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +11,13 @@ import android.widget.TextView;
 
 import com.example.android.alpacassoinventoryapp.data.AlpacassoContract.AlpacassoEntry;
 
-import org.w3c.dom.Text;
-
-import static com.example.android.alpacassoinventoryapp.R.string.colour;
-import static com.example.android.alpacassoinventoryapp.R.string.price;
-import static java.security.AccessController.getContext;
-
 /**
  * Created by novembergave on 02/01/2017.
  */
 
-public class AlpacassoCursorAdaptor extends CursorAdapter{
+public class AlpacassoCursorAdaptor extends CursorAdapter {
 
-    public AlpacassoCursorAdaptor(Context context, Cursor c){
+    public AlpacassoCursorAdaptor(Context context, Cursor c) {
         super(context, c, 0);
     }
 
@@ -58,7 +49,7 @@ public class AlpacassoCursorAdaptor extends CursorAdapter{
         int size = cursor.getInt(sizeColumnIndex);
         // Convert the integer values into text for display
         String sizeDisplayed;
-        if (size == 2){
+        if (size == 2) {
             sizeDisplayed = context.getString(R.string.size_large);
         } else if (size == 1) {
             sizeDisplayed = context.getString(R.string.size_medium);

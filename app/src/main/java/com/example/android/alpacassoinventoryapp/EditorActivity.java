@@ -45,9 +45,8 @@ public class EditorActivity extends AppCompatActivity
 
     public static final String LOG_TAG = EditorActivity.class.getSimpleName();
     private static final int EXISTING_ALPACASSO_LOADER = 0;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static int RESULT_LOAD_IMG = 1;
-    String imgDecodableString;
+    private String imgDecodableString;
     private EditText seriesEditText;
     private EditText colourEditText;
     private EditText priceEditText;

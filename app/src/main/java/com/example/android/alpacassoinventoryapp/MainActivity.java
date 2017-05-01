@@ -17,9 +17,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -27,13 +27,11 @@ import com.example.android.alpacassoinventoryapp.data.AlpacassoContract.Alpacass
 
 import java.io.ByteArrayOutputStream;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-
 /**
  * Created by novembergave on 01/01/2017.
  */
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int ALPACASSO_LOADER = 0;
     AlpacassoCursorAdaptor mCursorAdaptor;
 
@@ -72,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private void insertDummyData(){
+    private void insertDummyData() {
         Bitmap imageBitmap = ((BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.alpacassobg)).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         alertDialog.show();
     }
 
-    private void deleteAllData(){
+    private void deleteAllData() {
         int rowsDeleted = getContentResolver().delete(AlpacassoEntry.CONTENT_URI, null, null);
         Log.v("MainActivity", rowsDeleted + " rows deleted from alpacasso database");
     }

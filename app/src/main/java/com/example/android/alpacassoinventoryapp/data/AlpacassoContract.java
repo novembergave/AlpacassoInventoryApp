@@ -10,13 +10,12 @@ import android.provider.BaseColumns;
 
 public class AlpacassoContract {
 
-    private void AlpacassoContract(){}
-
     public static final String CONTENT_AUTHORITY = "com.example.android.alpacassoinventoryapp";
-
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
     public static final String PATH_ALPACASSO = "alpacasso";
+
+    private void AlpacassoContract() {
+    }
 
     public static final class AlpacassoEntry implements BaseColumns {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_ALPACASSO);
@@ -27,13 +26,13 @@ public class AlpacassoContract {
         public final static String TABLE_NAME = "alpacassos";
         public final static String _ID = BaseColumns._ID;
 
-        public final static String COLUMN_SERIES_NAME ="series";
-        public final static String COLUMN_COLOUR ="colour";
-        public final static String COLUMN_SIZE ="size";
-        public final static String COLUMN_STOCK_STATUS ="stockstatus";
-        public final static String COLUMN_STOCK_LEVEL ="stock";
+        public final static String COLUMN_SERIES_NAME = "series";
+        public final static String COLUMN_COLOUR = "colour";
+        public final static String COLUMN_SIZE = "size";
+        public final static String COLUMN_STOCK_STATUS = "stockstatus";
+        public final static String COLUMN_STOCK_LEVEL = "stock";
         public final static String COLUMN_RESTOCK_AMOUNT = "restock";
-        public final static String COLUMN_UNIT_PRICE ="price";
+        public final static String COLUMN_UNIT_PRICE = "price";
         public final static String COLUMN_IMAGE = "image";
 
         public static final int SIZE_SMALL = 0;
@@ -44,7 +43,7 @@ public class AlpacassoContract {
         public static final int STOCK_OUT = 1;
 
         public static boolean isValidSize(int size) {
-            if (size == SIZE_SMALL || size == SIZE_MEDIUM || size == SIZE_LARGE){
+            if (size == SIZE_SMALL || size == SIZE_MEDIUM || size == SIZE_LARGE) {
                 return true;
             }
             return false;

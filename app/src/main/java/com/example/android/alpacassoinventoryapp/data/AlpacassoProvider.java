@@ -12,10 +12,6 @@ import android.util.Log;
 import com.example.android.alpacassoinventoryapp.R;
 import com.example.android.alpacassoinventoryapp.data.AlpacassoContract.AlpacassoEntry;
 
-import static android.R.attr.name;
-import static com.example.android.alpacassoinventoryapp.R.string.price;
-import static com.example.android.alpacassoinventoryapp.R.string.size;
-
 /**
  * Created by novembergave on 02/01/2017.
  */
@@ -164,7 +160,7 @@ public class AlpacassoProvider extends ContentProvider {
                 break;
             case ALPACASSO_ID:
                 selection = AlpacassoEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(AlpacassoEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
