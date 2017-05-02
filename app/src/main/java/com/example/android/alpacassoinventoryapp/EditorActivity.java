@@ -9,21 +9,18 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -116,16 +113,6 @@ public class EditorActivity extends AppCompatActivity
             addRestockedItems();
         }
     };
-    private View.OnClickListener cameraAction = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            // Start the Intent
-            startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
-            Log.d(LOG_TAG, "Activity started");
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +146,6 @@ public class EditorActivity extends AppCompatActivity
         inStockIndicator = (RadioButton) findViewById(R.id.in_stock);
         outStockIndicator = (RadioButton) findViewById(R.id.out_of_stock);
         restockEditText = (EditText) findViewById(R.id.restock);
-        alpacassoImageView = (ImageView) findViewById(R.id.alpacasso_image);
 
         seriesEditText.setOnTouchListener(mTouchListener);
         colourEditText.setOnTouchListener(mTouchListener);
@@ -170,19 +156,20 @@ public class EditorActivity extends AppCompatActivity
         inStockIndicator.setOnTouchListener(mTouchListener);
         outStockIndicator.setOnTouchListener(mTouchListener);
         restockEditText.setOnTouchListener(mTouchListener);
-        alpacassoImageView.setOnTouchListener(mTouchListener);
 
         setUpSpinner();
         setUpRadioListener();
 
         TextView minusButton = (TextView) findViewById(R.id.minus_button);
         TextView plusButton = (TextView) findViewById(R.id.plus_button);
+        Button saleButton = (Button) findViewById(R.id.sale_button);
         minusButton.setOnTouchListener(mTouchListener);
         plusButton.setOnTouchListener(mTouchListener);
+        saleButton.setOnTouchListener(mTouchListener);
 
         minusButton.setOnClickListener(minusAction);
         plusButton.setOnClickListener(plusAction);
-        alpacassoImageView.setOnClickListener(cameraAction);
+        saleButton.setOnClickListener(minusAction);
 
 
     }
@@ -246,15 +233,6 @@ public class EditorActivity extends AppCompatActivity
         colourString = colourEditText.getText().toString().trim();
         stockString = stockEditText.getText().toString().trim();
         restockString = restockEditText.getText().toString().trim();
-        alpacassoBitmap = ImageByte.drawableToByteArray(alpacassoImageView.getDrawable());
-
-        Log.e(LOG_TAG, String.valueOf(alpacassoBitmap));
-
-        if (alpacassoBitmap == null) {
-            alpacassoBitmap =
-                    ImageByte.drawableToByteArray(ContextCompat.getDrawable(this, R.drawable.ic_action_camera));
-            Log.d(LOG_TAG, String.valueOf(alpacassoBitmap));
-        }
 
         priceInputString = priceEditText.getText().toString().trim();
 
@@ -298,7 +276,6 @@ public class EditorActivity extends AppCompatActivity
             values.put(AlpacassoEntry.COLUMN_STOCK_STATUS, mStockIndicator);
             values.put(AlpacassoEntry.COLUMN_RESTOCK_AMOUNT, restockString);
             values.put(AlpacassoEntry.COLUMN_SIZE, mSize);
-            values.put(AlpacassoEntry.COLUMN_IMAGE, alpacassoBitmap);
 
             if (mCurrentUri == null) {
                 Uri newUri = getContentResolver().insert(AlpacassoEntry.CONTENT_URI, values);
@@ -455,15 +432,6 @@ public class EditorActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (captureBmp != null) {
-            ImageByte.clearBitmap(captureBmp);
-            Log.d(LOG_TAG, "Clear bitmap action performed");
-        }
-
-        if (orientedBmp != null) {
-            ImageByte.clearBitmap(orientedBmp);
-            Log.d(LOG_TAG, "Clear oriented bitmap action performed");
-        }
     }
 
     @Override
@@ -478,11 +446,6 @@ public class EditorActivity extends AppCompatActivity
             case R.id.action_save:
                 saveAlpacasso();
                 finish();
-                Log.d(LOG_TAG, "save alpacasso finished");
-//                ImageByte.clearBitmap(captureBmp);
-//                Log.d(LOG_TAG, "Clear bitmap action performed");
-//                ImageByte.clearBitmap(orientedBmp);
-//                Log.d(LOG_TAG, "Clear oriented bitmap action performed");
                 return true;
 
             case R.id.action_restock:
@@ -560,8 +523,7 @@ public class EditorActivity extends AppCompatActivity
                 AlpacassoEntry.COLUMN_STOCK_STATUS,
                 AlpacassoEntry.COLUMN_STOCK_LEVEL,
                 AlpacassoEntry.COLUMN_RESTOCK_AMOUNT,
-                AlpacassoEntry.COLUMN_UNIT_PRICE,
-                AlpacassoEntry.COLUMN_IMAGE
+                AlpacassoEntry.COLUMN_UNIT_PRICE
         };
 
         return new CursorLoader(
@@ -587,7 +549,6 @@ public class EditorActivity extends AppCompatActivity
             int stockLevelColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_STOCK_LEVEL);
             int restockColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_RESTOCK_AMOUNT);
             int priceColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_UNIT_PRICE);
-            int imageColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_IMAGE);
 
             String seriesName = cursor.getString(seriesColumnIndex);
             String colour = cursor.getString(colourColumnIndex);
@@ -597,14 +558,12 @@ public class EditorActivity extends AppCompatActivity
             int stockStatus = cursor.getInt(stockStatusColumnIndex);
             int stockLevel = cursor.getInt(stockLevelColumnIndex);
             float price = cursor.getFloat(priceColumnIndex);
-            byte[] image = cursor.getBlob(imageColumnIndex);
 
             seriesEditText.setText(seriesName);
             colourEditText.setText(colour);
             priceEditText.setText(String.format("%.02f", price));
             stockEditText.setText(Integer.toString(stockLevel));
             restockEditText.setText(restockAmount);
-            alpacassoImageView.setImageBitmap(ImageByte.byteToDrawable(image));
 
             switch (size) {
                 case AlpacassoEntry.SIZE_MEDIUM:
@@ -642,63 +601,7 @@ public class EditorActivity extends AppCompatActivity
         sizeSpinner.setSelection(0);
         inStockIndicator.setChecked(true);
         outStockIndicator.setChecked(false);
-        alpacassoImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_camera));
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        try {
-            // When an Image is picked
-            if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
-                    && null != data) {
-                // Get the Image from data
-
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                // Get the cursor
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                // Move to first row
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                imgDecodableString = cursor.getString(columnIndex);
-                cursor.close();
-                ImageView alpacassoImage = (ImageView) findViewById(R.id.alpacasso_image);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(imgDecodableString, options);
-                int photoW = options.outWidth;
-
-                int scaleFactor = photoW / 120;
-
-                Log.e(LOG_TAG, String.valueOf(scaleFactor));
-
-                options.inJustDecodeBounds = false;
-                options.inScaled = false;
-                options.inSampleSize = scaleFactor;
-                Log.e(LOG_TAG, imgDecodableString);
-                captureBmp = BitmapFactory
-                        .decodeFile(imgDecodableString, options);
-                orientedBmp = ExifUtil.rotateBitmap(imgDecodableString, captureBmp);
-                // Set the Image in ImageView after decoding the String
-                alpacassoImage.setImageBitmap(orientedBmp);
-                Log.d(LOG_TAG, "After set Image action complete");
-
-            } else {
-                Toast.makeText(this, "You haven't picked Image",
-                        Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
-                    .show();
-        }
-
-
-    }
-
 
 }
 

@@ -124,11 +124,6 @@ public class AlpacassoProvider extends ContentProvider {
             throw new IllegalArgumentException(getContext().getString(R.string.error_price_required));
         }
 
-        byte[] image = contentValues.getAsByteArray(AlpacassoEntry.COLUMN_IMAGE);
-        if (image == null) {
-            throw new IllegalArgumentException(getContext().getString(R.string.error_image));
-        }
-
         // Get writeable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -239,15 +234,6 @@ public class AlpacassoProvider extends ContentProvider {
                 throw new IllegalArgumentException(getContext().getString(R.string.error_price_required));
             }
         }
-
-        if (values.containsKey(AlpacassoEntry.COLUMN_IMAGE)) {
-            byte[] image = values.getAsByteArray(AlpacassoEntry.COLUMN_IMAGE);
-            if (image == null) {
-                throw new IllegalArgumentException(getContext().getString(R.string.error_image));
-            }
-        }
-
-        // No need to check the breed, any value is valid (including null).
 
         // If there are no values to update, then don't try to update the database
         if (values.size() == 0) {

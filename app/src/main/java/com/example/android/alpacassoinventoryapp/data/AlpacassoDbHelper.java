@@ -1,10 +1,13 @@
 package com.example.android.alpacassoinventoryapp.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.android.alpacassoinventoryapp.data.AlpacassoContract.AlpacassoEntry;
+
+import static android.R.attr.id;
 
 /**
  * Created by novembergave on 02/01/2017.
@@ -31,8 +34,7 @@ public class AlpacassoDbHelper extends SQLiteOpenHelper {
                         + AlpacassoEntry.COLUMN_STOCK_STATUS + " INTEGER NOT NULL, "
                         + AlpacassoEntry.COLUMN_STOCK_LEVEL + " INTEGER NOT NULL, "
                         + AlpacassoEntry.COLUMN_RESTOCK_AMOUNT + " INTEGER NOT NULL, "
-                        + AlpacassoEntry.COLUMN_UNIT_PRICE + " REAL NOT NULL DEFAULT 0, "
-                        + AlpacassoEntry.COLUMN_IMAGE + " BLOB); ";
+                        + AlpacassoEntry.COLUMN_UNIT_PRICE + " REAL NOT NULL DEFAULT 0); ";
 
         sqLiteDatabase.execSQL(SQL_CREATE_INVENTORY_TABLE);
     }
@@ -41,4 +43,5 @@ public class AlpacassoDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         //nothing to do here as database is still on version 1
     }
+
 }
