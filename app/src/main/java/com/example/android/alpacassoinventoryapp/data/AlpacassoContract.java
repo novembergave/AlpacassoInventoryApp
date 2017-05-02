@@ -33,7 +33,6 @@ public class AlpacassoContract {
         public final static String COLUMN_STOCK_LEVEL = "stock";
         public final static String COLUMN_RESTOCK_AMOUNT = "restock";
         public final static String COLUMN_UNIT_PRICE = "price";
-        public final static String COLUMN_IMAGE = "image";
 
         public static final int SIZE_SMALL = 0;
         public static final int SIZE_MEDIUM = 1;

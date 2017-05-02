@@ -14,7 +14,7 @@
     <string name="in_stock_display"> in stock</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="number_stock">Number in stock</string>
+    <string name="number_stock">No. in stock</string>
     <string name="price">Unit Price</string>
     <string name="price_unit">GBP£</string>
     <string name="add_alpacasso">Add an Alpacasso</string>
@@ -41,6 +41,7 @@
     <string name="stocked">Stocked</string>
     <string name="prompt_save_send">Would you like to save any changes and send the restock email?</string>
     <string name="positive_save_send">Save and send</string>
+    <string name="sale_button">sale</string>
 
     <string name="error_series_required">Please enter series name</string>
     <string name="error_colour_required">Please enter the colour</string>

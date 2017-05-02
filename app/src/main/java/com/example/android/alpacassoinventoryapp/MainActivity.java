@@ -8,12 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,8 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.alpacassoinventoryapp.data.AlpacassoContract.AlpacassoEntry;
-
-import java.io.ByteArrayOutputStream;
 
 /**
  * Created by novembergave on 01/01/2017.
@@ -71,10 +66,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void insertDummyData() {
-        Bitmap imageBitmap = ((BitmapDrawable) ContextCompat.getDrawable(this, R.drawable.alpacassobg)).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] byteData = baos.toByteArray();
 
         // Prefilled data for user to enter to see how it can work
         ContentValues values = new ContentValues();
@@ -85,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(AlpacassoEntry.COLUMN_SIZE, AlpacassoEntry.SIZE_SMALL);
         values.put(AlpacassoEntry.COLUMN_STOCK_STATUS, AlpacassoEntry.STOCK_IN);
         values.put(AlpacassoEntry.COLUMN_RESTOCK_AMOUNT, 0);
-        values.put(AlpacassoEntry.COLUMN_IMAGE, byteData);
 
         Uri newUri = getContentResolver().insert(AlpacassoEntry.CONTENT_URI, values);
     }
@@ -153,8 +143,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 AlpacassoEntry.COLUMN_SIZE,
                 AlpacassoEntry.COLUMN_UNIT_PRICE,
                 AlpacassoEntry.COLUMN_STOCK_LEVEL,
-                AlpacassoEntry.COLUMN_STOCK_STATUS,
-                AlpacassoEntry.COLUMN_IMAGE
+                AlpacassoEntry.COLUMN_STOCK_STATUS
         };
 
         return new CursorLoader(
