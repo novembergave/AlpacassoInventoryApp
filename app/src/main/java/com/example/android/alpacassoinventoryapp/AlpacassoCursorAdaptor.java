@@ -1,5 +1,7 @@
 package com.example.android.alpacassoinventoryapp;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -8,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +29,16 @@ import static java.security.AccessController.getContext;
 
 public class AlpacassoCursorAdaptor extends CursorAdapter{
 
+    private int stockQuantity;
+    private int stockStatus;
+    private TextView stockTv;
+    private TextView seriesNameTv;
+    private TextView sizeTv;
+    private TextView colourTv;
+    private TextView priceTv;
+    private TextView currencyTv;
+    private ImageView imageIV;
+
     public AlpacassoCursorAdaptor(Context context, Cursor c){
         super(context, c, 0);
     }
@@ -36,20 +49,22 @@ public class AlpacassoCursorAdaptor extends CursorAdapter{
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        TextView seriesNameTv = (TextView) view.findViewById(R.id.item_series_name);
-        TextView sizeTv = (TextView) view.findViewById(R.id.item_size);
-        TextView colourTv = (TextView) view.findViewById(R.id.item_colour);
-        TextView priceTv = (TextView) view.findViewById(R.id.item_price);
-        TextView stockTv = (TextView) view.findViewById(R.id.item_stock);
-        TextView currencyTV = (TextView) view.findViewById(R.id.item_currency);
-        ImageView imageIV = (ImageView) view.findViewById(R.id.item_image);
+    public void bindView(View view, Context context, final Cursor cursor) {
+        seriesNameTv = (TextView) view.findViewById(R.id.item_series_name);
+        sizeTv = (TextView) view.findViewById(R.id.item_size);
+        colourTv = (TextView) view.findViewById(R.id.item_colour);
+        priceTv = (TextView) view.findViewById(R.id.item_price);
+        stockTv = (TextView) view.findViewById(R.id.item_stock);
+        currencyTv = (TextView) view.findViewById(R.id.item_currency);
+        imageIV = (ImageView) view.findViewById(R.id.item_image);
+        Button saleButton = (Button) view.findViewById(R.id.sale_button);
 
+        final int columnID = cursor.getColumnIndex(AlpacassoEntry._ID);
         int seriesColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_SERIES_NAME);
         int sizeColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_SIZE);
         int colourColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_COLOUR);
         int stockStatusColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_STOCK_STATUS);
-        int stockColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_STOCK_LEVEL);
+        final int stockColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_STOCK_LEVEL);
         int priceColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_UNIT_PRICE);
         int imageColumnIndex = cursor.getColumnIndex(AlpacassoEntry.COLUMN_IMAGE);
 
@@ -73,19 +88,20 @@ public class AlpacassoCursorAdaptor extends CursorAdapter{
         String priceDisplay = String.format("%.02f", price);
 
         String stockLevel = cursor.getString(stockColumnIndex);
-        int stockStatus = cursor.getInt(stockStatusColumnIndex);
+        stockQuantity = cursor.getInt(stockColumnIndex);
+        stockStatus = cursor.getInt(stockStatusColumnIndex);
         String stockDisplay;
         // Change colour of the view to greyed out if stock level is zero
         if (stockStatus == 1) {
             stockDisplay = context.getString(R.string.not_in_stock);
             seriesNameTv.setTextColor(context.getResources().getColor(R.color.greyedOutColor));
             priceTv.setTextColor(context.getResources().getColor(R.color.greyedOutColor));
-            currencyTV.setTextColor(context.getResources().getColor(R.color.greyedOutColor));
+            currencyTv.setTextColor(context.getResources().getColor(R.color.greyedOutColor));
         } else {
             stockDisplay = stockLevel + " " + context.getString(R.string.in_stock_display);
             seriesNameTv.setTextColor(context.getResources().getColor(R.color.normalTextColor));
             priceTv.setTextColor(context.getResources().getColor(R.color.normalTextColor));
-            currencyTV.setTextColor(context.getResources().getColor(R.color.normalTextColor));
+            currencyTv.setTextColor(context.getResources().getColor(R.color.normalTextColor));
         }
 
         byte[] image = cursor.getBlob(imageColumnIndex);
@@ -97,5 +113,61 @@ public class AlpacassoCursorAdaptor extends CursorAdapter{
         priceTv.setText(priceDisplay);
         stockTv.setText(stockDisplay);
         imageIV.setImageBitmap(ImageByte.byteToDrawable(image));
+
+        seriesNameTv.setText(seriesName);
+        sizeTv.setText(sizeDisplayed);
+        colourTv.setText(colour);
+        priceTv.setText(priceDisplay);
+        stockTv.setText(stockDisplay);
+
+        final int position = cursor.getPosition();
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cursor.moveToPosition(position);
+                int oldQuantity = (cursor.getInt(stockColumnIndex));
+                if (oldQuantity > 0) {
+                    oldQuantity--;
+                    if (oldQuantity > 0) {
+                        int newStockLevel = oldQuantity;
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(AlpacassoEntry.COLUMN_STOCK_LEVEL, newStockLevel);
+                        String whereArg = AlpacassoEntry._ID + " =?";
+                        //Get the item id which should be updated
+                        int item_id = cursor.getInt(columnID);
+                        String itemIDArgs = Integer.toString(item_id);
+                        String[] selectionArgs = {itemIDArgs};
+                        int rowsAffected = view.getContext().getContentResolver().update(
+                                ContentUris.withAppendedId(AlpacassoEntry.CONTENT_URI, item_id),
+                                contentValues,
+                                whereArg, selectionArgs);
+                        String newQu = cursor.getString(stockColumnIndex);
+                        stockTv.setText(newQu + " " +
+                                view.getContext().getString(R.string.in_stock_display));
+                    } else {
+                        int newStockLevel = oldQuantity;
+                        stockStatus = 1;
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(AlpacassoEntry.COLUMN_STOCK_LEVEL, newStockLevel);
+                        contentValues.put(AlpacassoEntry.COLUMN_STOCK_STATUS, stockStatus);
+                        String whereArg = AlpacassoEntry._ID + " =?";
+                        //Get the item id which should be updated
+                        int item_id = cursor.getInt(columnID);
+                        String itemIDArgs = Integer.toString(item_id);
+                        String[] selectionArgs = {itemIDArgs};
+                        int rowsAffected = view.getContext().getContentResolver().update(
+                                ContentUris.withAppendedId(AlpacassoEntry.CONTENT_URI, item_id),
+                                contentValues,
+                                whereArg, selectionArgs);
+                        stockTv.setText(view.getContext().getString(R.string.not_in_stock));
+                        seriesNameTv.setTextColor(view.getContext().getResources().getColor(R.color.greyedOutColor));
+                        priceTv.setTextColor(view.getContext().getResources().getColor(R.color.greyedOutColor));
+                        currencyTv.setTextColor(view.getContext().getResources().getColor(R.color.greyedOutColor));
+                    }
+
+                }
+
+            }
+        });
     }
 }

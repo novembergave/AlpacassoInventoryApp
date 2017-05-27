@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,7 +48,7 @@ public class EditorActivity extends AppCompatActivity
     private static final int EXISTING_ALPACASSO_LOADER = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static int RESULT_LOAD_IMG = 1;
-    String imgDecodableString;
+    private String imgDecodableString;
     private EditText seriesEditText;
     private EditText colourEditText;
     private EditText priceEditText;
@@ -178,11 +179,14 @@ public class EditorActivity extends AppCompatActivity
 
         TextView minusButton = (TextView) findViewById(R.id.minus_button);
         TextView plusButton = (TextView) findViewById(R.id.plus_button);
+        Button saleButton = (Button) findViewById(R.id.sale_button);
         minusButton.setOnTouchListener(mTouchListener);
         plusButton.setOnTouchListener(mTouchListener);
+        saleButton.setOnTouchListener(mTouchListener);
 
         minusButton.setOnClickListener(minusAction);
         plusButton.setOnClickListener(plusAction);
+        saleButton.setOnClickListener(minusAction);
         alpacassoImageView.setOnClickListener(cameraAction);
 
 
@@ -264,7 +268,7 @@ public class EditorActivity extends AppCompatActivity
             priceFloat = Float.valueOf(priceInputString);
             priceString = String.format("%.02f", priceFloat);
         } catch (NumberFormatException nfe) {
-            priceFloat = 0;
+            priceFloat = 0.0f;
         }
 
         // The following is to capture the null or zero value inputs in stock

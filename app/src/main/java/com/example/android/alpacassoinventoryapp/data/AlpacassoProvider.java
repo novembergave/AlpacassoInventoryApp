@@ -239,7 +239,7 @@ public class AlpacassoProvider extends ContentProvider {
 
         if (values.containsKey(AlpacassoEntry.COLUMN_UNIT_PRICE)) {
             Float price = values.getAsFloat(AlpacassoEntry.COLUMN_UNIT_PRICE);
-            if (price == null && price < 0) {
+            if (price == null && price < 0f) {
                 throw new IllegalArgumentException(getContext().getString(R.string.error_price_required));
             }
         }
