@@ -52,6 +52,8 @@
     <string name="error_price_required">Please enter unit price</string>
     <string name="error_image">Error with image data</string>
 
+    <string name="error_permissions_required">Permissions Required</string>
+
 
     <string-array name="size_array">
         <item>Small</item>

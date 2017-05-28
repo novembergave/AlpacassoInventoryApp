@@ -1,5 +1,7 @@
 package com.example.android.alpacassoinventoryapp;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -7,12 +9,15 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +51,7 @@ public class EditorActivity extends AppCompatActivity
 
     public static final String LOG_TAG = EditorActivity.class.getSimpleName();
     private static final int EXISTING_ALPACASSO_LOADER = 0;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int PICK_FROM_GALLERY = 1;
     private static int RESULT_LOAD_IMG = 1;
     private String imgDecodableString;
     private EditText seriesEditText;
@@ -121,11 +126,20 @@ public class EditorActivity extends AppCompatActivity
     private View.OnClickListener cameraAction = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            // Start the Intent
-            startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
-            Log.d(LOG_TAG, "Activity started");
+            try {
+                if (ActivityCompat.checkSelfPermission(EditorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(EditorActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_FROM_GALLERY);
+                } else {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    // Start the Intent
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+                    Log.d(LOG_TAG, "Activity started");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     };
 
@@ -648,6 +662,28 @@ public class EditorActivity extends AppCompatActivity
         inStockIndicator.setChecked(true);
         outStockIndicator.setChecked(false);
         alpacassoImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_camera));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode)
+        {
+            case PICK_FROM_GALLERY:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    // Start the Intent
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+                    Log.d(LOG_TAG, "Activity started");
+                }
+                else
+                {
+                    Toast.makeText(this, getString(R.string.error_permissions_required), Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+        }
     }
 
     @Override
